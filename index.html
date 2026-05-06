@@ -1,420 +1,404 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PENGHU VOYAGE | 5-Day Official Itinerary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500&family=Noto+Sans+TC:wght@100;300;500&display=swap');
+        
+        :root {
+            --grass-green: #7eb67d; 
+            --ocean-blue: #4fb3e8;  
+            --sky-light: #bde4ff;   
+            --noto-bg: #fdfdfb;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            font-weight: 300;
+            background-color: var(--noto-bg);
+            color: #1a1a1a;
+            margin: 0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+            opacity: 0.04;
+            background-image: url('https://grainy-gradients.vercel.app/noise.svg');
+        }
+
+        .visual-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .wave-art-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 380px;
+            overflow: hidden;
+        }
+
+        .wave-svg {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            bottom: -10px;
+            mix-blend-mode: multiply;
+        }
+
+        .wave-svg path {
+            animation: waveMotion 4s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;
+        }
+
+        .wave-ocean {
+            left: -50%;
+            animation: waveShift 10s linear infinite reverse;
+        }
+
+        .wave-sky {
+            left: 0;
+            animation: waveShift 7s linear infinite;
+        }
+
+        @keyframes waveMotion {
+            from { d: path("M0,160 C400,60 800,260 1200,160 C1600,60 2000,260 2400,160 L2400,400 L0,400 Z"); }
+            to { d: path("M0,160 C400,260 800,60 1200,160 C1600,260 2000,60 2400,160 L2400,400 L0,400 Z"); }
+        }
+
+        @keyframes waveShift {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .main-title {
+            font-size: clamp(3.5rem, 12vw, 8rem);
+            font-weight: 300; 
+            letter-spacing: -0.02em;
+            line-height: 0.85;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            color: #000;
+        }
+
+        .sub-accent {
+            color: var(--grass-green);
+            font-weight: 500;
+            letter-spacing: 0.3em;
+        }
+
+        .info-pill {
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            padding: 4px 12px;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 20px;
+            background: white;
+            color: #888;
+        }
+
+        .nav-link {
+            font-size: 11px;
+            font-weight: 300;
+            color: #ccc;
+            cursor: pointer;
+            letter-spacing: 0.2em;
+            transition: all 0.4s ease;
+            position: relative;
+            padding-bottom: 10px;
+            white-space: nowrap;
+        }
+
+        .nav-link.active { 
+            color: var(--grass-green); 
+            font-weight: 500; 
+        }
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--grass-green);
+        }
+
+        .itinerary-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 3.5rem;
+            padding: 3.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.02);
+        }
+
+        .schedule-row {
+            display: grid;
+            grid-template-columns: 75px 1fr auto;
+            padding: 24px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.02);
+            align-items: center;
+        }
+
+        .time-label { font-size: 12px; font-weight: 200; color: #bbb; font-family: 'Inter'; }
+        .spot-name { font-size: 20px; font-weight: 300; letter-spacing: 0.02em; }
+        .spot-note { font-size: 11px; color: #999; margin-top: 5px; font-weight: 200; line-height: 1.6; }
+
+        .sequence-tag {
+            color: var(--grass-green);
+            font-weight: 500;
+        }
+
+        .map-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+        }
+
+        .map-btn:hover {
+            opacity: 1;
+            background: #000;
+            color: #fff;
+            border-color: #000;
+            transform: scale(1.1);
+        }
+
+        .fade-in { animation: fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="zh-TW"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;PENGHU VOYAGE | 5-Day Official Itinerary&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500&amp;family=Noto+Sans+TC:wght@100;300;500&amp;display=swap');</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>:root {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>--grass-green: #7eb67d;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>--ocean-blue: #4fb3e8; <span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>--sky-light: #bde4ff;<span class="Apple-converted-space">   </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>--noto-bg: #fdfdfb;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Inter', 'Noto Sans TC', sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 300;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-color: var(--noto-bg);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #1a1a1a;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>overflow-x: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>min-height: 100vh;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.noise-overlay {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: fixed;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>top: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>left: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>pointer-events: none;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>z-index: 100;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>opacity: 0.04;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background-image: url('https://grainy-gradients.vercel.app/noise.svg');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.visual-background {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: fixed;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>top: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>left: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>z-index: 1;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>pointer-events: none;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.wave-art-container {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>bottom: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>left: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 380px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>overflow: hidden;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.wave-svg {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 200%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>bottom: -10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>mix-blend-mode: multiply;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.wave-svg path {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>animation: waveMotion 4s cubic-bezier(0.445, 0.05, 0.55, 0.95) infinite alternate;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.wave-ocean {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>left: -50%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>animation: waveShift 10s linear infinite reverse;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.wave-sky {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>left: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>animation: waveShift 7s linear infinite;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>@keyframes waveMotion {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>from { d: path("M0,160 C400,60 800,260 1200,160 C1600,60 2000,260 2400,160 L2400,400 L0,400 Z"); }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>to { d: path("M0,160 C400,260 800,60 1200,160 C1600,260 2000,60 2400,160 L2400,400 L0,400 Z"); }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>@keyframes waveShift {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>from { transform: translateX(0); }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>to { transform: translateX(-50%); }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.content-wrapper {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>z-index: 10;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>max-width: 850px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 60px 40px;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.main-title {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: clamp(3.5rem, 12vw, 8rem);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 300;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>letter-spacing: -0.02em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>line-height: 0.85;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 40px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>text-transform: uppercase;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #000;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.sub-accent {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: var(--grass-green);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 500;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>letter-spacing: 0.3em;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.info-pill {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>letter-spacing: 0.1em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 4px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid rgba(0,0,0,0.05);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 20px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: white;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #888;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.nav-link {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-size: 11px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 300;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #ccc;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>letter-spacing: 0.2em;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.4s ease;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding-bottom: 10px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>white-space: nowrap;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.nav-link.active {<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: var(--grass-green);<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 500;<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.nav-link.active::after {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>content: '';</p>
-<p class="p1"><span class="Apple-converted-space">            </span>position: absolute;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>bottom: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>left: 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 2px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: var(--grass-green);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.itinerary-card {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: rgba(255, 255, 255, 0.5);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>backdrop-filter: blur(25px);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid rgba(255, 255, 255, 0.6);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 3.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 3.5rem;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 20px 50px rgba(0,0,0,0.02);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.schedule-row {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: grid;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>grid-template-columns: 75px 1fr auto;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>padding: 24px 0;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-bottom: 1px solid rgba(0,0,0,0.02);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.time-label { font-size: 12px; font-weight: 200; color: #bbb; font-family: 'Inter'; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.spot-name { font-size: 20px; font-weight: 300; letter-spacing: 0.02em; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.spot-note { font-size: 11px; color: #999; margin-top: 5px; font-weight: 200; line-height: 1.6; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.sequence-tag {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: var(--grass-green);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 500;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.map-btn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>width: 40px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>height: 40px;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 50%;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid rgba(0,0,0,0.05);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #ccc;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.3s ease;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>opacity: 0.5;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.map-btn:hover {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>opacity: 1;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>background: #000;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>color: #fff;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>border-color: #000;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>transform: scale(1.1);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.fade-in { animation: fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>@keyframes fadeIn {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>from { opacity: 0; transform: translateY(30px); }</p>
-<p class="p1"><span class="Apple-converted-space">            </span>to { opacity: 1; transform: translateY(0); }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.no-scrollbar::-webkit-scrollbar { display: none; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="noise-overlay"&gt;&lt;/div&gt;</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="visual-background"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="wave-art-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;svg style="width:0;height:0;position:absolute;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;defs&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;linearGradient id="gradOcean" x1="0%" y1="0%" x2="0%" y2="100%"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;stop offset="0%" style="stop-color:var(--ocean-blue); stop-opacity:0.6" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;stop offset="100%" style="stop-color:white; stop-opacity:0" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/linearGradient&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;linearGradient id="gradSky" x1="0%" y1="0%" x2="0%" y2="100%"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;stop offset="0%" style="stop-color:var(--sky-light); stop-opacity:0.4" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;stop offset="100%" style="stop-color:white; stop-opacity:0" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/linearGradient&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/defs&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/svg&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;svg class="wave-svg wave-ocean" viewBox="0 0 2400 400" preserveAspectRatio="none"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;path fill="url(#gradOcean)" d="M0,160 C400,60 800,260 1200,160 C1600,60 2000,260 2400,160 L2400,400 L0,400 Z"&gt;&lt;/path&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/svg&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;svg class="wave-svg wave-sky" viewBox="0 0 2400 400" preserveAspectRatio="none"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;path fill="url(#gradSky)" d="M0,160 C400,260 800,60 1200,160 C1600,260 2000,60 2400,160 L2400,400 L0,400 Z"&gt;&lt;/path&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/svg&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="content-wrapper"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;header class="fade-in"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;h1 class="main-title"&gt;PENGHU&lt;br&gt;VOYAGE.&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="flex flex-col gap-6 mb-16"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-[10px] sub-accent uppercase"&gt;5-Day Scooter Exploration / Coastal Scenery &amp; Local Flavors&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex gap-2 mt-3"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="info-pill"&gt;May 08 - 12, 2026&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="info-pill"&gt;Stay: Green Hotel (綠的旅店)&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="flex justify-between items-end border-t border-black/5 pt-4"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex gap-6"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-[8px] uppercase opacity-30 font-bold"&gt;Dep. Flight (AE365)&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-[10px] font-medium"&gt;08:00 - 09:00&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-[8px] uppercase opacity-30 font-bold"&gt;Ret. Flight (AE374)&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;p class="text-[10px] font-medium"&gt;16:50 - 17:45&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;p class="text-xs font-light opacity-40 italic"&gt;Official Final Version&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/header&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;nav class="flex gap-8 mb-12 no-scrollbar overflow-x-auto fade-in"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span onclick="renderDay(1)" id="btn1" class="nav-link active"&gt;D1 馬公市區&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span onclick="renderDay(2)" id="btn2" class="nav-link"&gt;D2 望安跳島&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span onclick="renderDay(3)" id="btn3" class="nav-link"&gt;D3 西嶼北環&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span onclick="renderDay(4)" id="btn4" class="nav-link"&gt;D4 南環花火&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span onclick="renderDay(5)" id="btn5" class="nav-link"&gt;D5 悠閒歸途&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/nav&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="itinerary" class="itinerary-card fade-in"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;!-- 內容由 JS 渲染 --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;footer class="mt-24 pb-20 text-center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;p class="text-[8px] font-light tracking-[1.5em] uppercase opacity-10"&gt;Endless Summer Dreams&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/footer&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const schedule = {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>1: {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>region: "馬公市區與暖身",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>location: "澎湖本島 (Main Island)",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>items: [</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "08:00", name: "AE365 台北起飛", note: "台北松山機場 T2 出發，飛向澎湖" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "09:00", name: "抵達澎湖機場", note: "開啟五天四夜的湛藍之旅" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "09:45", name: "領取機車 / 綠的旅店寄物", note: "於機場領取機車，前往「綠的旅店」先行寄放行李" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "11:30", name: "小紅莓小吃店", note: "品嚐在地人的日常私藏美味，鮮魚湯與特色小吃" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "13:30", name: "篤行十村", note: "澎湖最古老眷村，拜訪潘安邦故居，漫步復古街道" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "15:00", name: "觀音亭周邊", note: "欣賞西瀛虹橋，預覽花火節場地與湛藍海景" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "16:30", name: "驚蟄茶室", note: "在純白質感空間喝茶，品味靜謐的島嶼午後" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "17:30", name: "紫玉仙草", note: "澎湖必吃仙草冰品，作為市區散步後的甜點補給" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "18:30", name: "漁人廚房", note: "享受職人對海鮮的極致詮釋，豐富的海味饗宴" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "21:00", name: "中央老街 / 四眼井夜拍", note: "晚上人潮較少，適合慢慢拍照、買小點心、散步" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "21:20", name: "四眼井許家店風茹茶", note: "喝澎湖最代表性的風茹茶（建議 21:00 前抵達最安全）" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "22:00", name: "Pier3 三號港港邊散步", note: "港邊夜晚散步區，可以逛逛、吹冷氣、買飲料休息" }</p>
-<p class="p1"><span class="Apple-converted-space">                </span>]</p>
-<p class="p1"><span class="Apple-converted-space">            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">            </span>2: {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>region: "望安島跳島巡禮",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>location: "南海離島 (South Sea Islands)",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>items: [</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "09:30", name: "南海遊客中心搭船", note: "乘船前往南海遺珠「望安島」，感受外島寧靜" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "10:45", name: "望安網垵口沙灘", note: "擁有最純淨的半月形海灣，享受晨間海色" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "11:30", name: "永發小吃部", note: "望安島推薦午餐首選，海鮮麵、小卷料理，在地人推薦" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "12:15", name: "望安小吃部 (備案)", note: "若永發小吃部沒開或客滿時可改吃" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "13:00", name: "花宅聚落", note: "走入咕咾石牆間的歲月回憶，尋訪中社村百年古厝" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "13:40", name: "蜜月島黑糖糕", note: "選購望安特有的黑糖糕，體驗手作甜味" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "14:10", name: "仙人掌冷飲店", note: "特色仙人掌冰品消暑，回碼頭前最後補給" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "14:30", name: "望安碼頭搭船返航", note: "準時搭乘回程船班返回馬公本島" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "18:30", name: "福牡蠣屋", note: "回本島後享用，推薦鮮美牡蠣醬飯與手蒸鮮蚵" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "20:30", name: "山水沙灘夜晚吹風", note: "望安回來後不排重行程，晚上到山水沙灘吹海風放鬆" }</p>
-<p class="p1"><span class="Apple-converted-space">                </span>]</p>
-<p class="p1"><span class="Apple-converted-space">            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">            </span>3: {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>region: "西嶼北環與港灣月色",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>location: "澎湖本島 (Main Island)",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>items: [</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "11:30", name: "小萍的店", note: "北環鮮甜前奏，小卷麵線創始店" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "13:00", name: "二崁聚落保存區", note: "傳統聚落保存區，建築工藝與文化深度並存" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "13:30", name: "二崁杏仁茶", note: "古宅內濃郁的杏仁香氣，必備的二崁午後享受" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "14:30", name: "魚好。刺身專門店", note: "職人手感的鮮活口感，每日限量刺身" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "15:30", name: "大池炸粿＆鯊魚排", note: "現炸鯊魚肉與蝦仁的驚喜在地美食" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "17:00", name: "風櫃洞", note: "欣賞奇特海蝕地質，聽「風櫃聽濤」" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "18:00", name: "奎壁山摩西分海", note: "見證大自然在海中開路的瞬間" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "19:30", name: "湖光食客 Lakeshore Foodie", note: "回馬公後的質感晚餐，作為北環海景日收尾" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "21:00", name: "阿家生蠔", note: "北環日結束後的宵夜備選，產地直送鮮甜" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "20:50", name: "十五月茶飲-海龜蛋燒", note: "酸甜仙人掌冰茶與海龜蛋燒（營業至 21:30）" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "21:20", name: "文康商圈宵夜散步", note: "買飲料、炸物，感受澎湖最熱鬧的商圈宵夜氛圍" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "21:50", name: "金龜頭砲台園區夜景", note: "看港口夜景、吹海風，適合北環行程後放空" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "22:20", name: "第三漁港夜晚散步", note: "感受澎湖夜晚漁港氛圍與港邊燈光" }</p>
-<p class="p1"><span class="Apple-converted-space">                </span>]</p>
-<p class="p1"><span class="Apple-converted-space">            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">            </span>4: {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>region: "南環浮潛與花火之夜",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>location: "澎湖本島 (Main Island)",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>items: [</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "11:00", name: "椒麻皮蛋麵", note: "南環著名的香麻開胃私藏料理" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "13:00", name: "薰衣草森林浮潛", note: "沈浸在紫色珊瑚群的夢幻海域" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "15:30", name: "回綠的旅店休息", note: "浮潛後休息，恢復體力準備迎接重頭戲" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "17:30", name: "時裡沙灘", note: "夕陽下的金黃沙灘，享受溫柔踏浪時光" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "18:00", name: "龍門海鮮 (備案)", note: "高品質海產大餐選項" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "18:30", name: "觀音亭卡位", note: "花火節人潮眾多，建議提早停好機車與卡位" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "21:00", name: "花火祭典 (觀音亭)", note: "視覺與聽覺交織的最震撼篇章" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "22:30", name: "友先燒烤", note: "煙火過後的熱血 BBQ 聚餐，大啖烤蚵肉串" }</p>
-<p class="p1"><span class="Apple-converted-space">                </span>]</p>
-<p class="p1"><span class="Apple-converted-space">            </span>},</p>
-<p class="p1"><span class="Apple-converted-space">            </span>5: {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>region: "悠閒收尾歸途",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>location: "澎湖本島 (Main Island)",</p>
-<p class="p1"><span class="Apple-converted-space">                </span>items: [</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "11:00", name: "綠的旅店退房", note: "保留輕鬆感，行李寄放旅店" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "11:30", name: "朝食暮饗", note: "澎湖感特色早餐（推薦：小管蛋餅、仙人掌奶茶）" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "13:00", name: "中央老街 / 市區伴手禮", note: "散步採買黑糖糕、干貝醬、花枝丸等" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "14:00", name: "𝐧𝐢𝐤𝐨𝐧𝐢", note: "日系老宅咖啡廳，享受手沖咖啡與季節甜點" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "15:20", name: "返回旅店拿行李", note: "準備前往機場" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "15:40", name: "機場還車 / Check-in", note: "建議提早抵達機場辦理登機手續" },</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>{ time: "16:50", name: "AE374 返程", note: "16:50 起飛，17:45 抵達台北松山機場，結束旅程" }</p>
-<p class="p1"><span class="Apple-converted-space">                </span>]</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>function renderDay(day) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.querySelectorAll('.nav-link').forEach(btn =&gt; btn.classList.remove('active'));</p>
-<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById(`btn${day}`).classList.add('active');</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>const data = schedule[day];</p>
-<p class="p1"><span class="Apple-converted-space">            </span>const container = document.getElementById('itinerary');</p>
-<p class="p2"><span class="Apple-converted-space">            </span></p>
-<p class="p1"><span class="Apple-converted-space">            </span>let html = `</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;div class="fade-in mb-10"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="flex items-center gap-3 mb-2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="text-[8px] tracking-[0.4em] sequence-tag uppercase"&gt;Sequence 0${day}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;span class="text-[8px] tracking-[0.2em] opacity-30 uppercase font-bold border-l border-black/10 pl-3"&gt;${data.location}&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;h2 class="text-3xl font-light"&gt;${day === 5 ? "Day 5｜5/12（二）悠閒收尾歸途" : data.region}&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>`;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>data.items.forEach((item, index) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>const mapLink = `https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(item.name + ' 澎湖')}`;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>html += `</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;div class="schedule-row fade-in" style="animation-delay: ${index * 0.08}s"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div class="time-label"&gt;${item.time}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="spot-name"&gt;${item.name}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;div class="spot-note"&gt;${item.note}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;a href="${mapLink}" target="_blank" class="map-btn" title="在 Google 地圖中查看"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"&gt;&lt;/path&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                                </span>&lt;circle cx="12" cy="10" r="3"&gt;&lt;/circle&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                            </span>&lt;/svg&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                        </span>&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">            </span>container.innerHTML = html;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>renderDay(1);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+    <div class="noise-overlay"></div>
+    
+    <div class="visual-background">
+        <div class="wave-art-container">
+            <svg style="width:0;height:0;position:absolute;">
+                <defs>
+                    <linearGradient id="gradOcean" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:var(--ocean-blue); stop-opacity:0.6" />
+                        <stop offset="100%" style="stop-color:white; stop-opacity:0" />
+                    </linearGradient>
+                    <linearGradient id="gradSky" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:var(--sky-light); stop-opacity:0.4" />
+                        <stop offset="100%" style="stop-color:white; stop-opacity:0" />
+                    </linearGradient>
+                </defs>
+            </svg>
+            <svg class="wave-svg wave-ocean" viewBox="0 0 2400 400" preserveAspectRatio="none">
+                <path fill="url(#gradOcean)" d="M0,160 C400,60 800,260 1200,160 C1600,60 2000,260 2400,160 L2400,400 L0,400 Z"></path>
+            </svg>
+            <svg class="wave-svg wave-sky" viewBox="0 0 2400 400" preserveAspectRatio="none">
+                <path fill="url(#gradSky)" d="M0,160 C400,260 800,60 1200,160 C1600,260 2000,60 2400,160 L2400,400 L0,400 Z"></path>
+            </svg>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+        <header class="fade-in">
+            <h1 class="main-title">PENGHU<br>VOYAGE.</h1>
+            <div class="flex flex-col gap-6 mb-16">
+                <div>
+                    <p class="text-[10px] sub-accent uppercase">5-Day Scooter Exploration / Coastal Scenery & Local Flavors</p>
+                    <div class="flex gap-2 mt-3">
+                        <span class="info-pill">May 08 - 12, 2026</span>
+                        <span class="info-pill">Stay: Green Hotel (綠的旅店)</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-end border-t border-black/5 pt-4">
+                    <div class="flex gap-6">
+                        <div>
+                            <p class="text-[8px] uppercase opacity-30 font-bold">Dep. Flight (AE365)</p>
+                            <p class="text-[10px] font-medium">08:00 - 09:00</p>
+                        </div>
+                        <div>
+                            <p class="text-[8px] uppercase opacity-30 font-bold">Ret. Flight (AE374)</p>
+                            <p class="text-[10px] font-medium">16:50 - 17:45</p>
+                        </div>
+                    </div>
+                    <p class="text-xs font-light opacity-40 italic">Official Final Version</p>
+                </div>
+            </div>
+        </header>
+
+        <nav class="flex gap-8 mb-12 no-scrollbar overflow-x-auto fade-in">
+            <span onclick="renderDay(1)" id="btn1" class="nav-link active">D1 馬公市區</span>
+            <span onclick="renderDay(2)" id="btn2" class="nav-link">D2 望安跳島</span>
+            <span onclick="renderDay(3)" id="btn3" class="nav-link">D3 西嶼北環</span>
+            <span onclick="renderDay(4)" id="btn4" class="nav-link">D4 南環花火</span>
+            <span onclick="renderDay(5)" id="btn5" class="nav-link">D5 悠閒歸途</span>
+        </nav>
+
+        <div id="itinerary" class="itinerary-card fade-in">
+            <!-- 內容由 JS 渲染 -->
+        </div>
+
+        <footer class="mt-24 pb-20 text-center">
+            <p class="text-[8px] font-light tracking-[1.5em] uppercase opacity-10">Endless Summer Dreams</p>
+        </footer>
+    </div>
+
+    <script>
+        const schedule = {
+            1: {
+                region: "馬公市區與暖身",
+                location: "澎湖本島 (Main Island)",
+                items: [
+                    { time: "08:00", name: "AE365 台北起飛", note: "台北松山機場 T2 出發，飛向澎湖" },
+                    { time: "09:00", name: "抵達澎湖機場", note: "開啟五天四夜的湛藍之旅" },
+                    { time: "09:45", name: "領取機車 / 綠的旅店寄物", note: "於機場領取機車，前往「綠的旅店」先行寄放行李" },
+                    { time: "11:30", name: "小紅莓小吃店", note: "品嚐在地人的日常私藏美味，鮮魚湯與特色小吃" },
+                    { time: "13:30", name: "篤行十村", note: "澎湖最古老眷村，拜訪潘安邦故居，漫步復古街道" },
+                    { time: "15:00", name: "觀音亭周邊", note: "欣賞西瀛虹橋，預覽花火節場地與湛藍海景" },
+                    { time: "16:30", name: "驚蟄茶室", note: "在純白質感空間喝茶，品味靜謐的島嶼午後" },
+                    { time: "17:30", name: "紫玉仙草", note: "澎湖必吃仙草冰品，作為市區散步後的甜點補給" },
+                    { time: "18:30", name: "漁人廚房", note: "享受職人對海鮮的極致詮釋，豐富的海味饗宴" },
+                    { time: "21:00", name: "中央老街 / 四眼井夜拍", note: "晚上人潮較少，適合慢慢拍照、買小點心、散步" },
+                    { time: "21:20", name: "四眼井許家店風茹茶", note: "喝澎湖最代表性的風茹茶（建議 21:00 前抵達最安全）" },
+                    { time: "22:00", name: "Pier3 三號港港邊散步", note: "港邊夜晚散步區，可以逛逛、吹冷氣、買飲料休息" }
+                ]
+            },
+            2: {
+                region: "望安島跳島巡禮",
+                location: "南海離島 (South Sea Islands)",
+                items: [
+                    { time: "09:30", name: "南海遊客中心搭船", note: "乘船前往南海遺珠「望安島」，感受外島寧靜" },
+                    { time: "10:45", name: "望安網垵口沙灘", note: "擁有最純淨的半月形海灣，享受晨間海色" },
+                    { time: "11:30", name: "永發小吃部", note: "望安島推薦午餐首選，海鮮麵、小卷料理，在地人推薦" },
+                    { time: "12:15", name: "望安小吃部 (備案)", note: "若永發小吃部沒開或客滿時可改吃" },
+                    { time: "13:00", name: "花宅聚落", note: "走入咕咾石牆間的歲月回憶，尋訪中社村百年古厝" },
+                    { time: "13:40", name: "蜜月島黑糖糕", note: "選購望安特有的黑糖糕，體驗手作甜味" },
+                    { time: "14:10", name: "仙人掌冷飲店", note: "特色仙人掌冰品消暑，回碼頭前最後補給" },
+                    { time: "14:30", name: "望安碼頭搭船返航", note: "準時搭乘回程船班返回馬公本島" },
+                    { time: "18:30", name: "福牡蠣屋", note: "回本島後享用，推薦鮮美牡蠣醬飯與手蒸鮮蚵" },
+                    { time: "20:30", name: "山水沙灘夜晚吹風", note: "望安回來後不排重行程，晚上到山水沙灘吹海風放鬆" }
+                ]
+            },
+            3: {
+                region: "西嶼北環與港灣月色",
+                location: "澎湖本島 (Main Island)",
+                items: [
+                    { time: "11:30", name: "小萍的店", note: "北環鮮甜前奏，小卷麵線創始店" },
+                    { time: "13:00", name: "二崁聚落保存區", note: "傳統聚落保存區，建築工藝與文化深度並存" },
+                    { time: "13:30", name: "二崁杏仁茶", note: "古宅內濃郁的杏仁香氣，必備的二崁午後享受" },
+                    { time: "14:30", name: "魚好。刺身專門店", note: "職人手感的鮮活口感，每日限量刺身" },
+                    { time: "15:30", name: "大池炸粿＆鯊魚排", note: "現炸鯊魚肉與蝦仁的驚喜在地美食" },
+                    { time: "17:00", name: "風櫃洞", note: "欣賞奇特海蝕地質，聽「風櫃聽濤」" },
+                    { time: "18:00", name: "奎壁山摩西分海", note: "見證大自然在海中開路的瞬間" },
+                    { time: "19:30", name: "湖光食客 Lakeshore Foodie", note: "回馬公後的質感晚餐，作為北環海景日收尾" },
+                    { time: "21:00", name: "阿家生蠔", note: "北環日結束後的宵夜備選，產地直送鮮甜" },
+                    { time: "20:50", name: "十五月茶飲-海龜蛋燒", note: "酸甜仙人掌冰茶與海龜蛋燒（營業至 21:30）" },
+                    { time: "21:20", name: "文康商圈宵夜散步", note: "買飲料、炸物，感受澎湖最熱鬧的商圈宵夜氛圍" },
+                    { time: "21:50", name: "金龜頭砲台園區夜景", note: "看港口夜景、吹海風，適合北環行程後放空" },
+                    { time: "22:20", name: "第三漁港夜晚散步", note: "感受澎湖夜晚漁港氛圍與港邊燈光" }
+                ]
+            },
+            4: {
+                region: "南環浮潛與花火之夜",
+                location: "澎湖本島 (Main Island)",
+                items: [
+                    { time: "11:00", name: "椒麻皮蛋麵", note: "南環著名的香麻開胃私藏料理" },
+                    { time: "13:00", name: "薰衣草森林浮潛", note: "沈浸在紫色珊瑚群的夢幻海域" },
+                    { time: "15:30", name: "回綠的旅店休息", note: "浮潛後休息，恢復體力準備迎接重頭戲" },
+                    { time: "17:30", name: "時裡沙灘", note: "夕陽下的金黃沙灘，享受溫柔踏浪時光" },
+                    { time: "18:00", name: "龍門海鮮 (備案)", note: "高品質海產大餐選項" },
+                    { time: "18:30", name: "觀音亭卡位", note: "花火節人潮眾多，建議提早停好機車與卡位" },
+                    { time: "21:00", name: "花火祭典 (觀音亭)", note: "視覺與聽覺交織的最震撼篇章" },
+                    { time: "22:30", name: "友先燒烤", note: "煙火過後的熱血 BBQ 聚餐，大啖烤蚵肉串" }
+                ]
+            },
+            5: {
+                region: "悠閒收尾歸途",
+                location: "澎湖本島 (Main Island)",
+                items: [
+                    { time: "11:00", name: "綠的旅店退房", note: "保留輕鬆感，行李寄放旅店" },
+                    { time: "11:30", name: "朝食暮饗", note: "澎湖感特色早餐（推薦：小管蛋餅、仙人掌奶茶）" },
+                    { time: "13:00", name: "中央老街 / 市區伴手禮", note: "散步採買黑糖糕、干貝醬、花枝丸等" },
+                    { time: "14:00", name: "𝐧𝐢𝐤𝐨𝐧𝐢", note: "日系老宅咖啡廳，享受手沖咖啡與季節甜點" },
+                    { time: "15:20", name: "返回旅店拿行李", note: "準備前往機場" },
+                    { time: "15:40", name: "機場還車 / Check-in", note: "建議提早抵達機場辦理登機手續" },
+                    { time: "16:50", name: "AE374 返程", note: "16:50 起飛，17:45 抵達台北松山機場，結束旅程" }
+                ]
+            }
+        };
+
+        function renderDay(day) {
+            document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn${day}`).classList.add('active');
+            
+            const data = schedule[day];
+            const container = document.getElementById('itinerary');
+            
+            let html = `
+                <div class="fade-in mb-10">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-[8px] tracking-[0.4em] sequence-tag uppercase">Sequence 0${day}</span>
+                        <span class="text-[8px] tracking-[0.2em] opacity-30 uppercase font-bold border-l border-black/10 pl-3">${data.location}</span>
+                    </div>
+                    <h2 class="text-3xl font-light">${day === 5 ? "Day 5｜5/12（二）悠閒收尾歸途" : data.region}</h2>
+                </div>
+            `;
+
+            data.items.forEach((item, index) => {
+                const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' 澎湖')}`;
+                html += `
+                    <div class="schedule-row fade-in" style="animation-delay: ${index * 0.08}s">
+                        <div class="time-label">${item.time}</div>
+                        <div>
+                            <div class="spot-name">${item.name}</div>
+                            <div class="spot-note">${item.note}</div>
+                        </div>
+                        <a href="${mapLink}" target="_blank" class="map-btn" title="在 Google 地圖中查看">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </a>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        renderDay(1);
+    </script>
 </body>
 </html>
