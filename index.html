@@ -171,6 +171,18 @@
         }
         .schedule-row:hover { background: rgba(255,255,255,0.4); }
 
+        .travel-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 0 10px 42px;
+            font-size: 10px;
+            color: #999;
+            font-style: italic;
+            border-left: 1px dashed #ddd;
+            margin-left: 45px;
+        }
+
         .drag-handle {
             cursor: grab; color: #ddd; padding-top: 5px;
             display: flex; align-items: center; justify-content: center;
@@ -184,7 +196,6 @@
         }
         .spot-name { font-size: 17px; font-weight: 500; color: #1a1a1a; }
         .spot-note { font-size: 11px; color: #666; margin-top: 4px; font-weight: 300; opacity: 0.8; line-height: 1.5; }
-        .recommendation { color: var(--neon-green-dark); font-weight: 500; font-size: 10px; margin-top: 4px; display: block; }
 
         .map-btn {
             width: 36px; height: 36px; border-radius: 10px;
@@ -197,7 +208,6 @@
         .sortable-ghost { opacity: 0.2; background: var(--neon-green) !important; }
         .sortable-chosen { background: rgba(255,255,255,0.8); }
 
-        /* Animations */
         .slide-left { animation: slideLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .slide-right { animation: slideRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes slideLeft { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
@@ -236,18 +246,6 @@
                         <span class="text-[10px] px-3 py-1 bg-white border border-black/5 rounded-full text-gray-500">2026/05/08 － 05/12</span>
                         <span class="text-[10px] px-3 py-1 bg-white border border-black/5 rounded-full text-gray-500">住宿：澎湖綠的旅店</span>
                     </div>
-                    <div class="flex flex-col gap-1.5 mt-4">
-                        <div class="flex items-center gap-2">
-                            <span class="text-[9px] font-bold px-1.5 py-0.5 bg-green-100 text-green-700 rounded">去程</span>
-                            <span class="text-[11px] text-gray-600 font-medium">AE365</span>
-                            <span class="text-[11px] text-gray-400">08:00 台北松山 → 09:00 澎湖</span>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-[9px] font-bold px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded">回程</span>
-                            <span class="text-[11px] text-gray-600 font-medium">AE374</span>
-                            <span class="text-[11px] text-gray-400">16:50 澎湖 → 17:45 台北松山</span>
-                        </div>
-                    </div>
                 </div>
             </div>
         </header>
@@ -256,7 +254,7 @@
             <span onclick="goToDay(1)" id="btn1" class="nav-link active">D1 市區</span>
             <span onclick="goToDay(2)" id="btn2" class="nav-link">D2 望安</span>
             <span onclick="goToDay(3)" id="btn3" class="nav-link">D3 北環</span>
-            <span onclick="goToDay(4)" id="btn4" class="nav-link">D4 南環</span>
+            <span onclick="goToDay(4)" id="btn4" class="nav-link">D4 浮潛</span>
             <span onclick="goToDay(5)" id="btn5" class="nav-link">D5 歸途</span>
         </nav>
 
@@ -270,67 +268,64 @@
     </div>
 
     <script>
-        // 加入 duration (持續分鐘數) 用於自動計算時間
         const schedule = {
             1: { region: "馬公市區暖身日", location: "澎湖本島", startTime: "09:00", items: [
-                { duration: 30, name: "AE365 抵達澎湖", note: "開啟湛藍之旅" },
-                { duration: 60, name: "領機車 / 綠的旅店", note: "辦理行李寄放" },
-                { duration: 90, name: "小紅莓小吃店", note: "在地人氣店", rec: "推薦：花枝排、炒飯" },
-                { duration: 90, name: "篤行十村", note: "散步拍照、感受眷村氛圍。" },
-                { duration: 90, name: "觀音亭周邊", note: "欣賞西瀛虹橋，預覽花火節場地。" },
-                { duration: 120, name: "驚蟄茶室", note: "靜謐下午茶休息。" },
-                { duration: 40, name: "紫玉仙草", note: "澎湖必吃仙草冰品。" },
-                { duration: 110, name: "漁人廚房", note: "晚餐時段。" },
-                { duration: 20, name: "中央老街 / 四眼井", note: "夜拍散步，避開人潮。" },
-                { duration: 40, name: "四眼井許家店風茹茶", note: "體驗在地青草茶文化", rec: "推薦：風茹茶、菊花風茹茶" },
-                { duration: 60, name: "Pier3 三號港", note: "港邊散步、逛逛免稅店。" }
+                { duration: 15, travelNext: 15, name: "AE365 抵達澎湖", note: "開啟湛藍之旅" },
+                { duration: 45, travelNext: 10, name: "領機車 / 綠的旅店寄放行李", note: "機場至市區機車約15分鐘" },
+                { duration: 80, travelNext: 5,  name: "小紅莓小吃店", note: "美味午餐，近篤行十村" },
+                { duration: 80, travelNext: 5,  name: "篤行十村", note: "文青散步拍照" },
+                { duration: 80, travelNext: 5,  name: "觀音亭周邊", note: "欣賞西瀛虹橋" },
+                { duration: 120, travelNext: 5,  name: "驚蟄茶室", note: "質感午茶時光" },
+                { duration: 30, travelNext: 5,  name: "紫玉仙草", note: "市區消暑聖品" },
+                { duration: 90, travelNext: 5,  name: "漁人廚房", note: "晚餐時段，職人海味" },
+                { duration: 15, travelNext: 3,  name: "中央老街 / 四眼井夜拍", note: "古街巡禮" },
+                { duration: 35, travelNext: 5,  name: "四眼井許家店風茹茶", note: "在地特產飲品" },
+                { duration: 60, travelNext: 0,  name: "Pier3 三號港港邊散步", note: "夜間港灣美景" }
             ]},
             2: { region: "望安島跳島日", location: "望安島", startTime: "09:30", items: [
-                { duration: 75, name: "南海遊客中心", note: "搭船前往望安島" },
-                { duration: 45, name: "望安網垵口沙灘", note: "超美月牙灣放空。" },
-                { duration: 45, name: "永發小吃部", note: "必吃在地海味", rec: "推薦：海鮮麵、小卷料理、海菜料理" },
-                { duration: 45, name: "望安小吃部", note: "（備案）若永發客滿可改吃此間。" },
-                { duration: 40, name: "花宅聚落", note: "望安經典古厝聚落建築。" },
-                { duration: 20, name: "蜜月島黑糖糕", note: "購買特色黑糖糕伴手禮。" },
-                { duration: 30, name: "仙人掌冷飲店", note: "消暑仙人掌冰品。" },
-                { duration: 180, name: "搭船返回馬公", note: "整理行囊準備晚餐。" },
-                { duration: 180, name: "福牡蠣屋", note: "豐富牡蠣料理晚餐。" },
-                { duration: 60, name: "山水沙灘夜晚吹風", note: "晚上海風清涼，適合放鬆聊天。" }
+                { duration: 75, travelNext: 0,  name: "南海遊客中心搭船至望安", note: "乘風破浪約75分鐘" },
+                { duration: 35, travelNext: 8,  name: "望安網垵口沙灘", note: "望安最美沙灘，碼頭騎車約5-8分鐘" },
+                { duration: 40, travelNext: 5,  name: "永發小吃部", note: "午餐時間，望安市中心" },
+                { duration: 35, travelNext: 5,  name: "花宅聚落", note: "古厝建築，望安景點距離近" },
+                { duration: 15, travelNext: 3,  name: "蜜月島黑糖糕", note: "在地手工甜點" },
+                { duration: 25, travelNext: 10, name: "仙人掌冷飲店", note: "返回碼頭前的清涼" },
+                { duration: 120, travelNext: 0, name: "搭船返回馬公", note: "船程約75-90分鐘" },
+                { duration: 135, travelNext: 10, name: "福牡蠣屋", note: "飽餐一頓，市區騎車約5-10分鐘" },
+                { duration: 105, travelNext: 20, name: "友先燒烤", note: "宵夜派對，市區至郊區約15-20分鐘" },
+                { duration: 60, travelNext: 0,  name: "山水沙灘夜晚吹風", note: "海風輕拂收尾" }
             ]},
             3: { region: "西嶼北環日", location: "澎湖本島 (西嶼)", startTime: "11:00", items: [
-                { duration: 60, name: "小萍的店", note: "北環人氣麵線", rec: "推薦：海鮮與小卷料理" },
-                { duration: 40, name: "二崁聚落保存區", note: "經典澎湖古厝聚落群。" },
-                { duration: 80, name: "二崁杏仁茶", note: "聚落內必喝古法杏仁茶。" },
-                { duration: 90, name: "魚好。刺身專門店", note: "新鮮現切生魚片。" },
-                { duration: 90, name: "大池炸粿＆鯊魚排", note: "下午茶點心首選。" },
-                { duration: 60, name: "風櫃洞", note: "聽濤、看海蝕洞地景。" },
-                { duration: 20, name: "奎壁山摩西分海", note: "需留意潮汐時間。" },
-                { duration: 90, name: "三哥酒釀雞排", note: "超夯酒釀香氣", rec: "推薦：酒釀雞排、酒釀雞肉串" },
-                { duration: 50, name: "湖光食客", note: "在地特色質感料理。" },
-                { duration: 20, name: "阿家生蠔", note: "海味宵夜補給。" },
-                { duration: 20, name: "十五月茶飲-海龜蛋燒", note: "超萌海龜造型造型", rec: "推薦：仙人掌冰茶、海龜蛋燒" },
-                { duration: 30, name: "文康商圈", note: "宵夜散步，買飲料點心。" },
-                { duration: 30, name: "金龜頭砲台園區", note: "欣賞港邊夜景與海風。" },
-                { duration: 30, name: "第三漁港", note: "感受寧靜的夜晚漁港氛圍。" }
+                { duration: 50, travelNext: 15, name: "小萍的店", note: "跨海大橋至小萍的店約10分鐘" },
+                { duration: 30, travelNext: 10, name: "二崁聚落保存區", note: "小卷麵線後移動至二崁" },
+                { duration: 70, travelNext: 5,  name: "二崁杏仁茶", note: "聚落內步行即可" },
+                { duration: 80, travelNext: 10, name: "魚好。刺身專門店", note: "二崁至大池約8-10分鐘" },
+                { duration: 80, travelNext: 40, name: "大池炸粿＆鯊魚排", note: "大跨度移動：西嶼至馬公郊區" },
+                { duration: 60, travelNext: 35, name: "風櫃洞", note: "大跨度移動：風櫃至湖西奎壁山" },
+                { duration: 60, travelNext: 25, name: "奎壁山摩西分海", note: "奎壁山回市區車程約25分鐘" },
+                { duration: 65, travelNext: 10, name: "湖光食客 Lakeshore Foodie", note: "特色晚餐" },
+                { duration: 15, travelNext: 5,  name: "阿家生蠔", note: "市區補給" },
+                { duration: 15, travelNext: 5,  name: "十五月茶飲-海龜蛋燒", note: "可愛點心" },
+                { duration: 25, travelNext: 10, name: "文康商圈宵夜散步", note: "市區漫遊" },
+                { duration: 30, travelNext: 0,  name: "第三漁港夜晚散步", note: "港邊靜謐" }
             ]},
-            4: { region: "浮潛 × 花火節", location: "澎湖本島", startTime: "11:00", items: [
-                { duration: 120, name: "椒麻皮蛋麵", note: "開胃的午餐選擇。" },
-                { duration: 180, name: "薰衣草森林浮潛", note: "沈浸在紫色珊瑚海中。" },
-                { duration: 60, name: "回綠的旅店休息", note: "稍作梳洗體力回填。" },
-                { duration: 40, name: "時裡沙灘", note: "南環最美白沙灘。" },
-                { duration: 50, name: "三哥酒釀雞排", note: "花火節前先買好炸物。" },
-                { duration: 150, name: "觀音亭卡位", note: "提早加油、提早停車。⚠️重要" },
-                { duration: 30, name: "澎湖花火節", note: "年度重頭戲，震撼視覺饗宴。" },
-                { duration: 90, name: "友先燒烤", note: "花火節後的慶功晚餐。" }
+            4: { region: "浮潛 × 花火節日", location: "澎湖本島", startTime: "11:00", items: [
+                { duration: 100, travelNext: 25, name: "椒麻皮蛋麵", note: "市區至南環車程約20-25分鐘" },
+                { duration: 160, travelNext: 25, name: "薰衣草森林浮潛", note: "海底世界探索" },
+                { duration: 50, travelNext: 20, name: "回綠的旅店休息", note: "浮潛後盥洗充電" },
+                { duration: 35, travelNext: 5,  name: "時裡沙灘", note: "南環最細緻沙灘" },
+                { duration: 45, travelNext: 20, name: "澎湖三哥酒釀雞排", note: "返回市區卡位花火節" },
+                { duration: 150, travelNext: 0, name: "觀音亭卡位", note: "等待璀璨時刻" },
+                { duration: 60, travelNext: 0,  name: "澎湖花火節（觀音亭）", note: "夜空盛宴" },
+                { duration: 90, travelNext: 0,  name: "自由回飯店 / 超商補給", note: "輕鬆收尾" }
             ]},
-            5: { region: "悠閒收尾歸途", location: "澎湖本島", startTime: "11:00", items: [
-                { duration: 30, name: "綠的旅店退房", note: "行李可暫時寄放。" },
-                { duration: 90, name: "朝食暮饗", note: "創意特色早餐", rec: "推薦：小管蛋餅、干貝醬蛋餅、仙人掌奶茶" },
-                { duration: 60, name: "中央老街 / 伴手禮", note: "採買特產：黑糖糕、干貝醬等。" },
-                { duration: 80, name: "𝐧𝐢𝐤𝐨𝐧𝐢 咖啡", note: "日系老宅悠閒午後", rec: "推薦：手沖咖啡、季節甜點" },
-                { duration: 20, name: "返回旅店取行李", note: "檢查重要隨身物品。" },
-                { duration: 70, name: "機場還車 / Check-in", note: "提早辦理登機手續。" },
-                { duration: 60, name: "AE374 澎湖起飛", note: "飛往台北松山 (17:45 抵達)" }
+            5: { region: "悠閒收尾日", location: "澎湖本島", startTime: "11:00", items: [
+                { duration: 25, travelNext: 5,  name: "綠的旅店退房 / 寄物", note: "最後整理" },
+                { duration: 80, travelNext: 5,  name: "朝食暮饗", note: "市區內機車5分鐘內" },
+                { duration: 50, travelNext: 5,  name: "中央老街伴手禮散步", note: "最後採買" },
+                { duration: 70, travelNext: 8,  name: "𝐧𝐢𝐤𝐨𝐧𝐢", note: "寧靜午茶時光" },
+                { duration: 15, travelNext: 8,  name: "返回綠的旅店拿行李", note: "準備歸途" },
+                { duration: 65, travelNext: 15, name: "機場還車 / Check-in", note: "市區至機場約15-20分鐘" },
+                { duration: 60, travelNext: 0,  name: "AE374 澎湖 → 台北松山", note: "17:45 抵達台北松山" }
             ]}
         };
 
@@ -338,31 +333,11 @@
         let startSwipeX = 0;
         let isDragging = false;
 
-        // 計算時間的輔助函式
         function calculateTime(startTimeStr, totalMinutes) {
             const [hours, minutes] = startTimeStr.split(':').map(Number);
             const date = new Date();
             date.setHours(hours, minutes + totalMinutes, 0);
             return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-        }
-
-        function updateTimeLabels() {
-            const rows = document.querySelectorAll('.schedule-row');
-            let currentAccumulatedMinutes = 0;
-            const startTime = schedule[currentDay].startTime;
-
-            rows.forEach((row, index) => {
-                const timeLabel = row.querySelector('.time-label');
-                const duration = schedule[currentDay].items[index].duration;
-                
-                // 第一個項目的顯示時間即為 startTime
-                if (index === 0) {
-                    timeLabel.innerText = startTime;
-                } else {
-                    timeLabel.innerText = calculateTime(startTime, currentAccumulatedMinutes);
-                }
-                currentAccumulatedMinutes += duration;
-            });
         }
 
         function renderDay(day, direction = 'none') {
@@ -371,8 +346,10 @@
             
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             const activeNav = document.getElementById(`btn${day}`);
-            activeNav.classList.add('active');
-            activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            if (activeNav) {
+                activeNav.classList.add('active');
+                activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
 
             container.className = 'itinerary-card ' + (direction === 'left' ? 'slide-left' : direction === 'right' ? 'slide-right' : '');
 
@@ -391,30 +368,40 @@
 
             let accumulated = 0;
             data.items.forEach((item, index) => {
-                const displayTime = index === 0 ? data.startTime : calculateTime(data.startTime, accumulated);
-                accumulated += item.duration;
-
+                const displayTime = calculateTime(data.startTime, accumulated);
+                
                 html += `
-                    <div class="schedule-row" data-id="${index}">
-                        <div class="drag-handle">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="2">
-                                <circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/>
-                                <circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/>
-                            </svg>
+                    <div class="item-group">
+                        <div class="schedule-row" data-id="${index}">
+                            <div class="drag-handle">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="2">
+                                    <circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/>
+                                    <circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/>
+                                </svg>
+                            </div>
+                            <div class="time-label">${displayTime}</div>
+                            <div class="pr-2">
+                                <div class="spot-name">${item.name}</div>
+                                <div class="spot-note">${item.note}</div>
+                                <div class="text-[9px] text-gray-300 mt-1 uppercase font-bold tracking-widest">停留 ${item.duration}m</div>
+                            </div>
+                            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' 澎湖')}" target="_blank" class="map-btn">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                                </svg>
+                            </a>
                         </div>
-                        <div class="time-label">${displayTime}</div>
-                        <div class="pr-2">
-                            <div class="spot-name">${item.name}</div>
-                            <div class="spot-note">${item.note}</div>
-                            ${item.rec ? `<span class="recommendation">${item.rec}</span>` : ''}
-                        </div>
-                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' 澎湖')}" target="_blank" class="map-btn">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                        ${item.travelNext > 0 ? `
+                        <div class="travel-row">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="5" y="11" width="14" height="8" rx="2"/><circle cx="8" cy="19" r="2"/><circle cx="16" cy="19" r="2"/>
+                                <path d="M17 11V7l-5-4-5 4v4"/>
                             </svg>
-                        </a>
+                            Google Maps 預估機車：${item.travelNext} 分鐘
+                        </div>` : ''}
                     </div>
                 `;
+                accumulated += (item.duration + (item.travelNext || 0));
             });
 
             html += `</div>`;
@@ -429,8 +416,7 @@
                     const items = schedule[day].items;
                     const movedItem = items.splice(evt.oldIndex, 1)[0];
                     items.splice(evt.newIndex, 0, movedItem);
-                    // 重新排列後更新 DOM 中的時間顯示
-                    updateTimeLabels();
+                    renderDay(day);
                 }
             });
         }
