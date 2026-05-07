@@ -214,6 +214,13 @@
         @keyframes slideRight { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        .flight-card {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 1.5rem;
+            padding: 1.25rem;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
     </style>
 </head>
 <body>
@@ -245,6 +252,57 @@
                     <div class="flex flex-wrap gap-2 mt-3">
                         <span class="text-[10px] px-3 py-1 bg-white border border-black/5 rounded-full text-gray-500">2026/05/08 － 05/12</span>
                         <span class="text-[10px] px-3 py-1 bg-white border border-black/5 rounded-full text-gray-500">住宿：澎湖綠的旅店</span>
+                    </div>
+                </div>
+
+                <!-- 航班資訊設計 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flight-card">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold text-green-600 uppercase tracking-tighter">去程 DEPARTURE</span>
+                            <span class="text-[11px] font-medium text-gray-400">AE365</span>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <div class="text-[9px] text-gray-400 mb-1">2026/05/08 (五)</div>
+                                <div class="text-xl font-light">08:00</div>
+                                <div class="text-[10px] text-gray-500">台北松山 T2</div>
+                            </div>
+                            <div class="flex-1 flex justify-center pb-2 px-4">
+                                <div class="w-full h-[1px] bg-gray-200 relative">
+                                    <div class="absolute -top-[3px] right-0 w-[7px] h-[7px] border-r border-t border-gray-300 rotate-45"></div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[9px] text-gray-400 mb-1">&nbsp;</div>
+                                <div class="text-xl font-light">09:00</div>
+                                <div class="text-[10px] text-gray-500">抵達澎湖</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flight-card">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-[10px] font-bold text-green-600 uppercase tracking-tighter">回程 RETURN</span>
+                            <span class="text-[11px] font-medium text-gray-400">AE374</span>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <div class="text-[9px] text-gray-400 mb-1">2026/05/12 (二)</div>
+                                <div class="text-xl font-light">16:50</div>
+                                <div class="text-[10px] text-gray-500">澎湖馬公</div>
+                            </div>
+                            <div class="flex-1 flex justify-center pb-2 px-4">
+                                <div class="w-full h-[1px] bg-gray-200 relative">
+                                    <div class="absolute -top-[3px] right-0 w-[7px] h-[7px] border-r border-t border-gray-300 rotate-45"></div>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[9px] text-gray-400 mb-1">&nbsp;</div>
+                                <div class="text-xl font-light">17:45</div>
+                                <div class="text-[10px] text-gray-500">台北松山</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
