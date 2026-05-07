@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PENGHU VOYAGE | 5-Day Official Itinerary</title>
+    <title>PENGHU VOYAGE | 5-Day Interactive Itinerary</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=Noto+Sans+TC:wght@100;300;400;500;700&display=swap');
         
@@ -13,7 +14,6 @@
             --neon-green-dark: #4eb032;
             --neon-glow: rgba(103, 230, 68, 0.4);
             --noto-bg: #fdfdfb;
-            --ocean-wave: rgba(103, 230, 68, 0.15);
             --glow-main: var(--neon-glow);
             --glow-sub: rgba(163, 255, 51, 0.2);
         }
@@ -26,9 +26,9 @@
             margin: 0;
             overflow-x: hidden;
             min-height: 100vh;
+            touch-action: pan-y;
         }
 
-        /* 背景與噪點 */
         .noise-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -36,40 +36,6 @@
             z-index: 100;
             opacity: 0.05;
             background-image: url('https://grainy-gradients.vercel.app/noise.svg');
-        }
-
-        /* 底部海浪效果 (低高度版) */
-        .ocean-waves {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 10vh; 
-            z-index: 2;
-            pointer-events: none;
-            opacity: 0.6;
-        }
-        .wave {
-            background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg') repeat-x;
-            position: absolute;
-            bottom: -5px;
-            width: 6400px;
-            height: 100%;
-            animation: wave 25s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
-            filter: hue-rotate(45deg) brightness(1.2); 
-        }
-        .wave:nth-of-type(2) {
-            bottom: -15px;
-            animation: wave 18s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite, swell 6s ease -1.25s infinite;
-            opacity: 0.5;
-        }
-        @keyframes wave {
-            0% { margin-left: 0; }
-            100% { margin-left: -1600px; }
-        }
-        @keyframes swell {
-            0%, 100% { transform: translate3d(0, -10px, 0); }
-            50% { transform: translate3d(0, 5px, 0); }
         }
 
         .visual-background {
@@ -92,13 +58,44 @@
         }
         .spot-1 { width: 650px; height: 650px; background: radial-gradient(circle, var(--glow-main) 0%, rgba(255,255,255,0) 75%); top: -15%; left: -10%; animation-duration: 12s; }
         .spot-2 { width: 550px; height: 550px; background: radial-gradient(circle, var(--glow-sub) 0%, rgba(255,255,255,0) 70%); top: 35%; right: -15%; animation-delay: -3s; animation-duration: 18s; }
+        
         @keyframes glowMove {
             0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
             50% { transform: translate(5vw, 10vh) scale(1.1); opacity: 0.9; }
             100% { transform: translate(-3vw, 5vh) scale(0.95); opacity: 0.6; }
         }
 
-        /* 打字機無限循環 */
+        .ocean-waves {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 12vh; 
+            z-index: 2;
+            pointer-events: none;
+        }
+        .wave {
+            background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg') repeat-x;
+            position: absolute;
+            bottom: -5px;
+            width: 6400px;
+            height: 100%;
+            animation: wave 25s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+            filter: hue-rotate(45deg) brightness(1.2); 
+            transform: translate3d(0, 0, 0);
+        }
+        .wave-back {
+            bottom: 5px;
+            opacity: 0.3;
+            animation: wave 30s cubic-bezier(0.36, 0.45, 0.63, 0.53) -2s infinite;
+            filter: hue-rotate(35deg) brightness(1.1);
+        }
+        .wave-front {
+            opacity: 0.6;
+            animation: wave 22s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+        }
+        @keyframes wave { 0% { margin-left: 0; } 100% { margin-left: -1600px; } }
+
         .typewriter-container {
             margin-bottom: 3rem;
             padding: 2rem 0;
@@ -117,21 +114,10 @@
             width: 0;
             line-height: 1.1;
         }
-        .typewriter-line-1 {
-            animation: typingCycle 8s steps(6, end) infinite, blinkCursor 0.8s step-end infinite;
-        }
-        .typewriter-line-2 {
-            animation: typingCycle 8s steps(7, end) 1.2s infinite, blinkCursor 0.8s step-end infinite 1.2s;
-        }
-        @keyframes typingCycle {
-            0% { width: 0; }
-            20%, 80% { width: 100%; }
-            90%, 100% { width: 0; }
-        }
-        @keyframes blinkCursor {
-            from, to { border-color: transparent }
-            50% { border-color: var(--neon-green) }
-        }
+        .typewriter-line-1 { animation: typingCycle 8s steps(6, end) infinite, blinkCursor 0.8s step-end infinite; }
+        .typewriter-line-2 { animation: typingCycle 8s steps(7, end) 1.2s infinite, blinkCursor 0.8s step-end infinite 1.2s; }
+        @keyframes typingCycle { 0% { width: 0; } 20%, 80% { width: 100%; } 90%, 100% { width: 0; } }
+        @keyframes blinkCursor { from, to { border-color: transparent } 50% { border-color: var(--neon-green) } }
 
         .content-wrapper {
             position: relative;
@@ -139,26 +125,6 @@
             max-width: 850px;
             margin: 0 auto;
             padding: 20px;
-        }
-        @media (min-width: 768px) {
-            .content-wrapper { padding: 40px; }
-        }
-
-        .sub-accent {
-            color: var(--neon-green-dark);
-            font-weight: 600;
-            letter-spacing: 0.2em;
-        }
-
-        .info-pill {
-            font-size: 10px;
-            letter-spacing: 0.1em;
-            padding: 4px 12px;
-            border: 1px solid rgba(0,0,0,0.05);
-            border-radius: 20px;
-            background: white;
-            color: #666;
-            font-weight: 400;
         }
 
         .nav-link {
@@ -172,10 +138,7 @@
             padding: 5px 0 12px 0;
             white-space: nowrap;
         }
-        .nav-link.active { 
-            color: var(--neon-green-dark); 
-            font-weight: 600; 
-        }
+        .nav-link.active { color: var(--neon-green-dark); font-weight: 600; }
         .nav-link.active::after {
             content: '';
             position: absolute;
@@ -193,60 +156,52 @@
             box-shadow: 0 20px 45px rgba(0,0,0,0.02);
             position: relative;
             z-index: 10;
+            transition: transform 0.4s ease, opacity 0.4s ease;
         }
-        @media (min-width: 768px) {
-            .itinerary-card { padding: 3.5rem; border-radius: 3.5rem; }
-        }
+        @media (min-width: 768px) { .itinerary-card { padding: 3.5rem; border-radius: 3.5rem; } }
 
         .schedule-row {
             display: grid;
-            grid-template-columns: 60px 1fr 40px;
+            grid-template-columns: 30px 60px 1fr 40px;
             gap: 12px;
             padding: 22px 0;
             border-bottom: 1px solid rgba(0,0,0,0.03);
             align-items: flex-start;
+            transition: background 0.2s ease;
         }
+        .schedule-row:hover { background: rgba(255,255,255,0.4); }
+
+        .drag-handle {
+            cursor: grab; color: #ddd; padding-top: 5px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .drag-handle:active { cursor: grabbing; }
+
         .time-label { 
-            font-size: 11px; 
-            font-weight: 600; 
-            color: var(--neon-green-dark); 
-            font-family: 'Inter'; 
-            padding-top: 5px;
-            letter-spacing: 0.05em;
+            font-size: 11px; font-weight: 600; color: var(--neon-green-dark); 
+            font-family: 'Inter'; padding-top: 5px; letter-spacing: 0.05em;
+            transition: all 0.3s ease;
         }
-        .spot-name { 
-            font-size: 17px; 
-            font-weight: 500; 
-            letter-spacing: 0.01em; 
-            line-height: 1.4;
-            color: #1a1a1a;
-        }
-        .spot-note { 
-            font-size: 11px; 
-            color: #666; 
-            margin-top: 4px; 
-            font-weight: 300; 
-            line-height: 1.5; 
-            opacity: 0.8;
-        }
+        .spot-name { font-size: 17px; font-weight: 500; color: #1a1a1a; }
+        .spot-note { font-size: 11px; color: #666; margin-top: 4px; font-weight: 300; opacity: 0.8; line-height: 1.5; }
+        .recommendation { color: var(--neon-green-dark); font-weight: 500; font-size: 10px; margin-top: 4px; display: block; }
 
         .map-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 36px; height: 36px; border-radius: 10px;
             background: #f4faf2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             color: var(--neon-green-dark);
             transition: all 0.3s ease;
         }
 
-        .fade-in { animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .sortable-ghost { opacity: 0.2; background: var(--neon-green) !important; }
+        .sortable-chosen { background: rgba(255,255,255,0.8); }
+
+        /* Animations */
+        .slide-left { animation: slideLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .slide-right { animation: slideRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideLeft { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideRight { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
@@ -262,10 +217,9 @@
         </div>
     </div>
 
-    <!-- 海浪元素 -->
     <div class="ocean-waves">
-        <div class="wave"></div>
-        <div class="wave"></div>
+        <div class="wave wave-back"></div>
+        <div class="wave wave-front"></div>
     </div>
 
     <div class="content-wrapper">
@@ -275,40 +229,39 @@
                 <span class="typewriter-line typewriter-line-2">VOYAGE</span>
             </div>
 
-            <div class="flex flex-col gap-6 mb-10 md:mb-16 fade-in" style="animation-delay: 0.5s">
+            <div class="flex flex-col gap-6 mb-10 md:mb-16">
                 <div>
-                    <p class="text-[11px] sub-accent uppercase">5-Day Scooter Exploration / Coastal Scenery</p>
+                    <p class="text-[11px] font-bold text-green-600 uppercase tracking-widest">5-Day Interactive Exploration</p>
                     <div class="flex flex-wrap gap-2 mt-3">
-                        <span class="info-pill">May 08 - 12, 2026</span>
-                        <span class="info-pill">Stay: 綠的旅店 Green Hotel</span>
+                        <span class="text-[10px] px-3 py-1 bg-white border border-black/5 rounded-full text-gray-500">2026/05/08 － 05/12</span>
+                        <span class="text-[10px] px-3 py-1 bg-white border border-black/5 rounded-full text-gray-500">住宿：澎湖綠的旅店</span>
                     </div>
-                </div>
-                <div class="flex justify-between items-end border-t border-black/5 pt-4">
-                    <div class="flex gap-4 md:gap-8">
-                        <div>
-                            <p class="text-[8px] uppercase opacity-40 font-bold tracking-wider">Dep. Flight</p>
-                            <p class="text-[11px] font-medium">08:00 - 09:00</p>
+                    <div class="flex flex-col gap-1.5 mt-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] font-bold px-1.5 py-0.5 bg-green-100 text-green-700 rounded">去程</span>
+                            <span class="text-[11px] text-gray-600 font-medium">AE365</span>
+                            <span class="text-[11px] text-gray-400">08:00 台北松山 → 09:00 澎湖</span>
                         </div>
-                        <div>
-                            <p class="text-[8px] uppercase opacity-40 font-bold tracking-wider">Ret. Flight</p>
-                            <p class="text-[11px] font-medium">16:50 - 17:45</p>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] font-bold px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded">回程</span>
+                            <span class="text-[11px] text-gray-600 font-medium">AE374</span>
+                            <span class="text-[11px] text-gray-400">16:50 澎湖 → 17:45 台北松山</span>
                         </div>
                     </div>
-                    <p class="text-[10px] font-light opacity-30 italic">Ver 6.3 Updated Itinerary</p>
                 </div>
             </div>
         </header>
 
-        <nav class="flex gap-6 md:gap-8 mb-8 no-scrollbar overflow-x-auto fade-in" style="animation-delay: 0.7s">
-            <span onclick="renderDay(1)" id="btn1" class="nav-link active">D1 市區</span>
-            <span onclick="renderDay(2)" id="btn2" class="nav-link">D2 望安</span>
-            <span onclick="renderDay(3)" id="btn3" class="nav-link">D3 北環</span>
-            <span onclick="renderDay(4)" id="btn4" class="nav-link">D4 南環</span>
-            <span onclick="renderDay(5)" id="btn5" class="nav-link">D5 歸途</span>
+        <nav id="day-nav" class="flex gap-6 md:gap-8 mb-8 no-scrollbar overflow-x-auto border-b border-black/5">
+            <span onclick="goToDay(1)" id="btn1" class="nav-link active">D1 市區</span>
+            <span onclick="goToDay(2)" id="btn2" class="nav-link">D2 望安</span>
+            <span onclick="goToDay(3)" id="btn3" class="nav-link">D3 北環</span>
+            <span onclick="goToDay(4)" id="btn4" class="nav-link">D4 南環</span>
+            <span onclick="goToDay(5)" id="btn5" class="nav-link">D5 歸途</span>
         </nav>
 
-        <div id="itinerary" class="itinerary-card fade-in" style="animation-delay: 0.9s">
-            <!-- JS 內容 -->
+        <div id="swipe-area">
+            <div id="itinerary" class="itinerary-card"></div>
         </div>
 
         <footer class="mt-20 pb-24 text-center">
@@ -317,112 +270,146 @@
     </div>
 
     <script>
+        // 加入 duration (持續分鐘數) 用於自動計算時間
         const schedule = {
-            1: {
-                region: "馬公市區與暖身",
-                location: "澎湖本島 (Main Island)",
-                items: [
-                    { time: "08:00", name: "AE365 台北松山起飛", note: "松山機場 T2 出發，建議提前 1 小時報到" },
-                    { time: "09:00", name: "抵達澎湖機場", note: "開啟五天四夜的湛藍之旅" },
-                    { time: "09:45", name: "領機車 / 旅店寄物", note: "於機場領機車，先去「綠的旅店」寄放行李" },
-                    { time: "11:30", name: "小紅莓小吃店", note: "品嚐在地日常美味，推薦鮮魚湯與特色小吃" },
-                    { time: "13:30", name: "篤行十村", note: "澎湖最古老眷村，拜訪潘安邦故居，漫步復古街道" },
-                    { time: "15:00", name: "觀音亭周邊", note: "欣賞西瀛虹橋，預覽花火節場地與湛藍海景" },
-                    { time: "16:30", name: "驚蟄茶室", note: "純白質感空間，品味島嶼午後的靜謐茶香" },
-                    { time: "17:30", name: "紫玉仙草", note: "澎湖必吃！滿滿料的仙草冰作為能量補給" },
-                    { time: "18:30", name: "漁人廚房", note: "職人海鮮料理，享受極致鮮甜的海味饗宴" },
-                    { time: "21:00", name: "中央老街夜拍", note: "避開人潮，享受古樸街道的靜謐氛圍" },
-                    { time: "21:20", name: "四眼井許家店風茹茶", note: "澎湖在地青草茶代表" },
-                    { time: "22:00", name: "Pier3 三號港散步", note: "港邊散步區，吹冷氣、休息或選購免稅品" }
-                ]
-            },
-            2: {
-                region: "望安島跳島巡禮",
-                location: "南海離島 (South Sea Islands)",
-                items: [
-                    { time: "09:30", name: "南海遊客中心搭船", note: "乘船前往南海遺珠「望安島」，享受外島時光" },
-                    { time: "10:45", name: "網垵口沙灘", note: "超美半月形海灣，享受純淨晨間海色" },
-                    { time: "11:30", name: "永發小吃部", note: "望安島推薦午餐：海鮮麵、小卷料理" },
-                    { time: "13:00", name: "花宅聚落", note: "咕咾石牆間的歲月回憶，尋訪百年中社古厝" },
-                    { time: "13:40", name: "蜜月島黑糖糕", note: "望安特產黑糖糕，口感綿密紮實" },
-                    { time: "14:10", name: "仙人掌冷飲店", note: "回碼頭前的最後消暑補給" },
-                    { time: "14:30", name: "望安碼頭搭船返航", note: "準時搭船返回馬公本島" },
-                    { time: "18:30", name: "福牡蠣屋", note: "推薦鮮美牡蠣醬飯與手蒸鮮蚵" },
-                    { time: "20:30", name: "山水沙灘夜晚吹風", note: "到山水沙灘聽浪聲、吹海風，極致放鬆" }
-                ]
-            },
-            3: {
-                region: "西嶼北環與港灣月色",
-                location: "澎湖本島 (Main Island)",
-                items: [
-                    { time: "11:30", name: "小萍的店", note: "北環必吃！鮮甜小卷麵線創始店" },
-                    { time: "13:00", name: "二崁聚落保存區", note: "傳統聚落工藝建築，文化深度巡禮" },
-                    { time: "13:30", name: "二崁杏仁茶", note: "古宅濃郁杏仁香，二崁下午茶靈魂" },
-                    { time: "14:30", name: "魚好。刺身專門店", note: "職人手感，每日限量的新鮮刺身" },
-                    { time: "15:30", name: "大池炸粿＆鯊魚排", note: "現炸酥脆！在地驚喜海味炸物" },
-                    { time: "17:00", name: "風櫃洞", note: "奇特海蝕地景，聽風櫃聽濤的震撼聲" },
-                    { time: "18:00", name: "摩西分海 (奎壁山)", note: "大自然在海中開路的壯麗瞬間" },
-                    { time: "19:30", name: "湖光食客", note: "回馬公後的質感晚餐" },
-                    { time: "20:50", name: "十五月茶飲-海龜蛋燒", note: "特色仙人掌冰茶" },
-                    { time: "21:50", name: "金龜頭砲台夜景", note: "看港口夜景、吹吹海風放空" }
-                ]
-            },
-            4: {
-                region: "南環浮潛與花火之夜",
-                location: "澎湖本島 (Main Island)",
-                items: [
-                    { time: "11:00", name: "椒麻皮蛋麵", note: "南環著名的香麻開胃料理" },
-                    { time: "13:00", name: "薰衣草森林浮潛", note: "沈浸在紫色珊瑚群的夢幻海底世界" },
-                    { time: "15:30", name: "回旅店休息", note: "浮潛後回旅店梳洗、恢復體力" },
-                    { time: "17:30", name: "時裡沙灘", note: "夕陽下的金黃沙灘，溫柔的踏浪時光" },
-                    { time: "17:50", name: "三哥酒釀雞排", note: "澎湖超人氣！推薦酒釀雞排、雞肉串，卡位必備補給" },
-                    { time: "18:30", name: "觀音亭卡位", note: "花火節人多，建議提早找好觀賞位，邊享用雞排" },
-                    { time: "21:00", name: "花火節祭典", note: "視覺與聽覺交織的最震撼篇章" },
-                    { time: "22:30", name: "友先燒烤", note: "煙火後的熱血 BBQ 聚餐，大啖鮮烤蚵" }
-                ]
-            },
-            5: {
-                region: "悠閒收尾歸途",
-                location: "澎湖本島 (Main Island)",
-                items: [
-                    { time: "11:00", name: "旅店退房 Check-out", note: "行李可先寄放旅店，輕鬆度過最後半日" },
-                    { time: "11:30", name: "朝食暮饗", note: "推薦小管蛋餅、仙人掌奶茶" },
-                    { time: "13:00", name: "伴手禮採買", note: "最後掃貨" },
-                    { time: "14:00", name: "𝐧𝐢𝐤𝐨𝐧𝐢 咖啡", note: "日系老宅咖啡廳，享受靜謐午後" },
-                    { time: "15:40", name: "機場還車 / 報到", note: "建議提早 1 小時到達機場辦理手續" },
-                    { time: "16:50", name: "AE374 返程起飛", note: "帶著滿滿回憶飛往台北松山" }
-                ]
-            }
+            1: { region: "馬公市區暖身日", location: "澎湖本島", startTime: "09:00", items: [
+                { duration: 30, name: "AE365 抵達澎湖", note: "開啟湛藍之旅" },
+                { duration: 60, name: "領機車 / 綠的旅店", note: "辦理行李寄放" },
+                { duration: 90, name: "小紅莓小吃店", note: "在地人氣店", rec: "推薦：花枝排、炒飯" },
+                { duration: 90, name: "篤行十村", note: "散步拍照、感受眷村氛圍。" },
+                { duration: 90, name: "觀音亭周邊", note: "欣賞西瀛虹橋，預覽花火節場地。" },
+                { duration: 120, name: "驚蟄茶室", note: "靜謐下午茶休息。" },
+                { duration: 40, name: "紫玉仙草", note: "澎湖必吃仙草冰品。" },
+                { duration: 110, name: "漁人廚房", note: "晚餐時段。" },
+                { duration: 20, name: "中央老街 / 四眼井", note: "夜拍散步，避開人潮。" },
+                { duration: 40, name: "四眼井許家店風茹茶", note: "體驗在地青草茶文化", rec: "推薦：風茹茶、菊花風茹茶" },
+                { duration: 60, name: "Pier3 三號港", note: "港邊散步、逛逛免稅店。" }
+            ]},
+            2: { region: "望安島跳島日", location: "望安島", startTime: "09:30", items: [
+                { duration: 75, name: "南海遊客中心", note: "搭船前往望安島" },
+                { duration: 45, name: "望安網垵口沙灘", note: "超美月牙灣放空。" },
+                { duration: 45, name: "永發小吃部", note: "必吃在地海味", rec: "推薦：海鮮麵、小卷料理、海菜料理" },
+                { duration: 45, name: "望安小吃部", note: "（備案）若永發客滿可改吃此間。" },
+                { duration: 40, name: "花宅聚落", note: "望安經典古厝聚落建築。" },
+                { duration: 20, name: "蜜月島黑糖糕", note: "購買特色黑糖糕伴手禮。" },
+                { duration: 30, name: "仙人掌冷飲店", note: "消暑仙人掌冰品。" },
+                { duration: 180, name: "搭船返回馬公", note: "整理行囊準備晚餐。" },
+                { duration: 180, name: "福牡蠣屋", note: "豐富牡蠣料理晚餐。" },
+                { duration: 60, name: "山水沙灘夜晚吹風", note: "晚上海風清涼，適合放鬆聊天。" }
+            ]},
+            3: { region: "西嶼北環日", location: "澎湖本島 (西嶼)", startTime: "11:00", items: [
+                { duration: 60, name: "小萍的店", note: "北環人氣麵線", rec: "推薦：海鮮與小卷料理" },
+                { duration: 40, name: "二崁聚落保存區", note: "經典澎湖古厝聚落群。" },
+                { duration: 80, name: "二崁杏仁茶", note: "聚落內必喝古法杏仁茶。" },
+                { duration: 90, name: "魚好。刺身專門店", note: "新鮮現切生魚片。" },
+                { duration: 90, name: "大池炸粿＆鯊魚排", note: "下午茶點心首選。" },
+                { duration: 60, name: "風櫃洞", note: "聽濤、看海蝕洞地景。" },
+                { duration: 20, name: "奎壁山摩西分海", note: "需留意潮汐時間。" },
+                { duration: 90, name: "三哥酒釀雞排", note: "超夯酒釀香氣", rec: "推薦：酒釀雞排、酒釀雞肉串" },
+                { duration: 50, name: "湖光食客", note: "在地特色質感料理。" },
+                { duration: 20, name: "阿家生蠔", note: "海味宵夜補給。" },
+                { duration: 20, name: "十五月茶飲-海龜蛋燒", note: "超萌海龜造型造型", rec: "推薦：仙人掌冰茶、海龜蛋燒" },
+                { duration: 30, name: "文康商圈", note: "宵夜散步，買飲料點心。" },
+                { duration: 30, name: "金龜頭砲台園區", note: "欣賞港邊夜景與海風。" },
+                { duration: 30, name: "第三漁港", note: "感受寧靜的夜晚漁港氛圍。" }
+            ]},
+            4: { region: "浮潛 × 花火節", location: "澎湖本島", startTime: "11:00", items: [
+                { duration: 120, name: "椒麻皮蛋麵", note: "開胃的午餐選擇。" },
+                { duration: 180, name: "薰衣草森林浮潛", note: "沈浸在紫色珊瑚海中。" },
+                { duration: 60, name: "回綠的旅店休息", note: "稍作梳洗體力回填。" },
+                { duration: 40, name: "時裡沙灘", note: "南環最美白沙灘。" },
+                { duration: 50, name: "三哥酒釀雞排", note: "花火節前先買好炸物。" },
+                { duration: 150, name: "觀音亭卡位", note: "提早加油、提早停車。⚠️重要" },
+                { duration: 30, name: "澎湖花火節", note: "年度重頭戲，震撼視覺饗宴。" },
+                { duration: 90, name: "友先燒烤", note: "花火節後的慶功晚餐。" }
+            ]},
+            5: { region: "悠閒收尾歸途", location: "澎湖本島", startTime: "11:00", items: [
+                { duration: 30, name: "綠的旅店退房", note: "行李可暫時寄放。" },
+                { duration: 90, name: "朝食暮饗", note: "創意特色早餐", rec: "推薦：小管蛋餅、干貝醬蛋餅、仙人掌奶茶" },
+                { duration: 60, name: "中央老街 / 伴手禮", note: "採買特產：黑糖糕、干貝醬等。" },
+                { duration: 80, name: "𝐧𝐢𝐤𝐨𝐧𝐢 咖啡", note: "日系老宅悠閒午後", rec: "推薦：手沖咖啡、季節甜點" },
+                { duration: 20, name: "返回旅店取行李", note: "檢查重要隨身物品。" },
+                { duration: 70, name: "機場還車 / Check-in", note: "提早辦理登機手續。" },
+                { duration: 60, name: "AE374 澎湖起飛", note: "飛往台北松山 (17:45 抵達)" }
+            ]}
         };
 
-        function renderDay(day) {
-            document.querySelectorAll('.nav-link').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`btn${day}`).classList.add('active');
-            
+        let currentDay = 1;
+        let startSwipeX = 0;
+        let isDragging = false;
+
+        // 計算時間的輔助函式
+        function calculateTime(startTimeStr, totalMinutes) {
+            const [hours, minutes] = startTimeStr.split(':').map(Number);
+            const date = new Date();
+            date.setHours(hours, minutes + totalMinutes, 0);
+            return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+        }
+
+        function updateTimeLabels() {
+            const rows = document.querySelectorAll('.schedule-row');
+            let currentAccumulatedMinutes = 0;
+            const startTime = schedule[currentDay].startTime;
+
+            rows.forEach((row, index) => {
+                const timeLabel = row.querySelector('.time-label');
+                const duration = schedule[currentDay].items[index].duration;
+                
+                // 第一個項目的顯示時間即為 startTime
+                if (index === 0) {
+                    timeLabel.innerText = startTime;
+                } else {
+                    timeLabel.innerText = calculateTime(startTime, currentAccumulatedMinutes);
+                }
+                currentAccumulatedMinutes += duration;
+            });
+        }
+
+        function renderDay(day, direction = 'none') {
             const data = schedule[day];
             const container = document.getElementById('itinerary');
             
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            const activeNav = document.getElementById(`btn${day}`);
+            activeNav.classList.add('active');
+            activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+            container.className = 'itinerary-card ' + (direction === 'left' ? 'slide-left' : direction === 'right' ? 'slide-right' : '');
+
             let html = `
-                <div class="fade-in mb-8">
-                    <div class="flex items-center gap-3 mb-2">
-                        <span class="text-[9px] tracking-[0.3em] sequence-tag uppercase">SEQ 0${day}</span>
-                        <span class="text-[9px] tracking-[0.1em] opacity-30 uppercase font-bold border-l border-black/10 pl-3">${data.location}</span>
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-3">
+                            <span class="text-[9px] tracking-[0.3em] font-bold text-green-600 uppercase">DAY 0${day}</span>
+                            <span class="text-[9px] px-1.5 py-0.5 bg-green-50 text-green-600/70 rounded font-bold border border-green-200/50">${data.location}</span>
+                        </div>
                     </div>
-                    <h2 class="text-xl md:text-2xl font-medium text-gray-900">${day === 5 ? "D5｜5/12 悠閒歸途" : data.region}</h2>
+                    <h2 class="text-xl md:text-2xl font-medium text-gray-900">${data.region}</h2>
                 </div>
+                <div id="sortable-list">
             `;
 
+            let accumulated = 0;
             data.items.forEach((item, index) => {
-                const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' 澎湖')}`;
+                const displayTime = index === 0 ? data.startTime : calculateTime(data.startTime, accumulated);
+                accumulated += item.duration;
+
                 html += `
-                    <div class="schedule-row fade-in" style="animation-delay: ${index * 0.05}s">
-                        <div class="time-label">${item.time}</div>
+                    <div class="schedule-row" data-id="${index}">
+                        <div class="drag-handle">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="2">
+                                <circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/>
+                                <circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/>
+                            </svg>
+                        </div>
+                        <div class="time-label">${displayTime}</div>
                         <div class="pr-2">
                             <div class="spot-name">${item.name}</div>
                             <div class="spot-note">${item.note}</div>
+                            ${item.rec ? `<span class="recommendation">${item.rec}</span>` : ''}
                         </div>
-                        <a href="${mapLink}" target="_blank" class="map-btn" title="查看地圖">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' 澎湖')}" target="_blank" class="map-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
                             </svg>
                         </a>
@@ -430,10 +417,44 @@
                 `;
             });
 
+            html += `</div>`;
             container.innerHTML = html;
+
+            Sortable.create(document.getElementById('sortable-list'), {
+                animation: 250,
+                handle: ".drag-handle",
+                ghostClass: "sortable-ghost",
+                chosenClass: "sortable-chosen",
+                onEnd: function(evt) {
+                    const items = schedule[day].items;
+                    const movedItem = items.splice(evt.oldIndex, 1)[0];
+                    items.splice(evt.newIndex, 0, movedItem);
+                    // 重新排列後更新 DOM 中的時間顯示
+                    updateTimeLabels();
+                }
+            });
         }
 
-        renderDay(1);
+        function goToDay(day) {
+            if (day === currentDay) return;
+            const direction = day > currentDay ? 'left' : 'right';
+            currentDay = day;
+            renderDay(day, direction);
+        }
+
+        const swipeArea = document.getElementById('swipe-area');
+        swipeArea.addEventListener('touchstart', e => { startSwipeX = e.touches[0].clientX; isDragging = true; }, { passive: true });
+        swipeArea.addEventListener('touchend', e => {
+            if (!isDragging) return;
+            const diffX = startSwipeX - e.changedTouches[0].clientX;
+            if (Math.abs(diffX) > 70) {
+                if (diffX > 0 && currentDay < 5) goToDay(currentDay + 1);
+                else if (diffX < 0 && currentDay > 1) goToDay(currentDay - 1);
+            }
+            isDragging = false;
+        });
+
+        window.onload = () => renderDay(1);
     </script>
 </body>
 </html>
